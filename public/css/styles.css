@@ -118,19 +118,19 @@ main {
 }
 
 .upgrade-grid figure {
-  background-color: #0aa6c0;
-  padding: 0.5rem;
   text-align: center;
 }
 
-.upgrade-grid img {
-  max-width: 100%;
+.upgrade-grid figure img {
+  background-color: #0aa6c0;
+  padding: 0.5rem;
 }
 
 .upgrade-grid figcaption {
+  margin-top: 0.5rem;
   font-size: 0.9rem;
-  margin-top: 0.3rem;
 }
+
 
 /* ===============================
    Footer
@@ -178,3 +178,28 @@ footer {
     flex: 1;
   }
 }
+
+ .info {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .upgrades {
+    order: 1;
+  }
+
+  .reviews {
+    order: 2;
+  }
+
+  .info {
+    align-items: stretch;
+  }
+
+  .reviews,
+  .upgrades {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
