@@ -1,6 +1,180 @@
-/******* Change Box Model ***************/
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+/* ===============================
+   Base / Global Styles (Mobile First)
+================================ */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+#wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+
+/* ===============================
+   Header
+================================ */
+#top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.siteName a {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: #000;
+}
+
+#tools a {
+  text-decoration: none;
+  font-size: 1rem;
+  color: #000;
+}
+
+/* ===============================
+   Navigation
+================================ */
+nav {
+  background-color: #2c2f3a;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+nav li {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ===============================
+   Main Content
+================================ */
+main {
+  padding: 1rem;
+}
+
+/* ===============================
+   Hero Section
+================================ */
+.hero h1 {
+  margin-bottom: 1rem;
+}
+
+.hero-content {
+  display: block;
+}
+
+.hero-text h2 {
+  color: #0aa6c0;
+}
+
+.hero-text ul {
+  padding-left: 1.2rem;
+}
+
+.btn {
+  display: inline-block;
+  background-color: #0aa6c0;
+  color: #000;
+  padding: 0.6rem 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.hero-image img {
+  max-width: 100%;
+  display: block;
+  margin-top: 1rem;
+}
+
+/* ===============================
+   Info Section (Reviews & Upgrades)
+================================ */
+.info {
+  margin-top: 2rem;
+}
+
+.reviews ul {
+  padding-left: 1.2rem;
+}
+
+.upgrade-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.upgrade-grid figure {
+  background-color: #0aa6c0;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.upgrade-grid img {
+  max-width: 100%;
+}
+
+.upgrade-grid figcaption {
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+/* ===============================
+   Footer
+================================ */
+footer {
+  margin-top: 2rem;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+/* ===============================
+   Large Screens
+================================ */
+@media screen and (min-width: 768px) {
+
+  nav ul {
+    justify-content: flex-start;
+  }
+
+  nav li {
+    padding: 1rem 1.5rem;
+  }
+
+  .hero-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .hero-text {
+    flex: 1;
+  }
+
+  .hero-image {
+    flex: 1;
+  }
+
+  .info {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .reviews,
+  .upgrades {
+    flex: 1;
+  }
 }
