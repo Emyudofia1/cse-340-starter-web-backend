@@ -35,7 +35,6 @@ body {
 
 #tools a {
   text-decoration: none;
-  font-size: 1rem;
   color: #000;
 }
 
@@ -60,7 +59,7 @@ nav li {
 }
 
 /* ===============================
-   Main Content
+   Main
 ================================ */
 main {
   padding: 1rem;
@@ -69,12 +68,12 @@ main {
 /* ===============================
    Hero Section
 ================================ */
-.hero {
-  margin-bottom: 2rem;
+.hero h1 {
+  margin-bottom: 0.5rem;
 }
 
-.hero h1 {
-  margin-bottom: 0.25rem;
+.hero-content {
+  display: block; /* mobile default */
 }
 
 .hero-text h2 {
@@ -129,9 +128,12 @@ main {
   text-align: center;
 }
 
-.upgrade-grid img {
+.upgrade-grid figure div {
   background-color: #0aa6c0;
   padding: 1rem;
+}
+
+.upgrade-grid img {
   width: 100%;
   max-width: 120px;
 }
@@ -151,7 +153,7 @@ footer {
 }
 
 /* ===============================
-   Large Screens (Desktop)
+   Large Screens
 ================================ */
 @media screen and (min-width: 768px) {
 
@@ -165,7 +167,7 @@ footer {
   }
 
   /* Hero layout */
-  .hero {
+  .hero-content {
     display: flex;
     align-items: center;
     gap: 2rem;
@@ -176,24 +178,17 @@ footer {
     flex: 1;
   }
 
-  /* Info section */
+  /* Info layout */
   .info {
     flex-direction: row;
     align-items: stretch;
   }
 
   .upgrades {
-    order: 1;
+    order: 1; /* LEFT */
   }
 
   .reviews {
-    order: 2;
-  }
-
-  .upgrades,
-  .reviews {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    order: 2; /* RIGHT */
   }
 }
