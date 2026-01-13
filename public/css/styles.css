@@ -49,10 +49,10 @@ nav ul {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: space-around;
 }
 
 nav li {
+  padding: 1rem;
   color: #ffffff;
   font-weight: 600;
 }
@@ -68,15 +68,12 @@ main {
    Hero Section
 ================================ */
 .hero h1 {
-  margin-bottom: 1rem;
-}
-
-.hero-content {
-  display: block;
+  margin-bottom: 0.5rem;
 }
 
 .hero-text h2 {
   color: #0aa6c0;
+  margin-top: 0;
 }
 
 .hero-text ul {
@@ -100,7 +97,7 @@ main {
 }
 
 /* ===============================
-   Info Section (Reviews & Upgrades)
+   Info Section (Mobile)
 ================================ */
 .info {
   margin-top: 2rem;
@@ -110,27 +107,31 @@ main {
   padding-left: 1.2rem;
 }
 
+/* ===============================
+   Upgrade Grid
+================================ */
 .upgrade-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  gap: 1.5rem;
   margin-top: 1rem;
 }
 
 .upgrade-grid figure {
   text-align: center;
+  margin: 0;
 }
 
-.upgrade-grid figure img {
+.upgrade-grid img {
   background-color: #0aa6c0;
-  padding: 0.5rem;
+  padding: 0.75rem;
+  max-width: 100%;
 }
 
 .upgrade-grid figcaption {
   margin-top: 0.5rem;
   font-size: 0.9rem;
 }
-
 
 /* ===============================
    Footer
@@ -142,10 +143,11 @@ footer {
 }
 
 /* ===============================
-   Large Screens
+   Large Screens (Desktop)
 ================================ */
 @media screen and (min-width: 768px) {
 
+  /* Navigation spacing like reference */
   nav ul {
     justify-content: flex-start;
   }
@@ -154,7 +156,8 @@ footer {
     padding: 1rem 1.5rem;
   }
 
-  .hero-content {
+  /* Hero layout */
+  .hero {
     display: flex;
     align-items: center;
     gap: 2rem;
@@ -168,38 +171,22 @@ footer {
     flex: 1;
   }
 
+  /* Info section layout */
   .info {
     display: flex;
     gap: 2rem;
+    align-items: stretch;
   }
 
-  .reviews,
+  /* Order MUST match reference:
+     Upgrades on LEFT, Reviews on RIGHT */
   .upgrades {
     flex: 1;
-  }
-}
-
- .info {
-    display: flex;
-    gap: 2rem;
-  }
-
-  .upgrades {
     order: 1;
   }
 
   .reviews {
+    flex: 1;
     order: 2;
   }
-
-  .info {
-    align-items: stretch;
-  }
-
-  .reviews,
-  .upgrades {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
+}
