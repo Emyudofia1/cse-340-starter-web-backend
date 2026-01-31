@@ -192,3 +192,26 @@ footer {
     order: 2; /* RIGHT */
   }
 }
+
+
+.vehicle-detail {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.vehicle-detail img {
+  width: 100%;
+  height: auto;
+}
+
+.vehicle-info {
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .vehicle-detail {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
