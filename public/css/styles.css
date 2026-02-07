@@ -53,8 +53,13 @@ nav ul {
   gap: 2rem;
 }
 
-nav li {
+
+nav a {
   color: #fff;
+}
+
+nav li {
+  color: wheat;
   font-weight: 600;
 }
 
