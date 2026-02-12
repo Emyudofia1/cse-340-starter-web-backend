@@ -1,0 +1,28 @@
+<%- include("../partials/header") %>
+
+<main>
+  <h1><%= title %></h1>
+
+  <% if (messages && messages.length > 0) { %>
+    <div class="notice">
+      <%= messages[0] %>
+    </div>
+  <% } %>
+
+  <section class="management-links">
+    <ul>
+      <li>
+        <a href="/inv/add-classification">
+          Add New Classification
+        </a>
+      </li>
+      <li>
+        <a href="/inv/add-inventory">
+          Add New Inventory Item
+        </a>
+      </li>
+    </ul>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>

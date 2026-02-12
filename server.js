@@ -7,12 +7,18 @@ const expressLayouts = require("express-ejs-layouts")
 require("dotenv").config()
 const app = express()
 
+
 const staticRoutes = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities")
 const session = require("express-session")
 const pool = require('./database/')
+const accountRoute = require("./routes/accountRoute")
+const flash = require("connect-flash")
+const bodyParser = require("body-parser")
+
+
 
 
 /* ***********************
@@ -38,6 +44,10 @@ app.use(function(req, res, next){
 })
 
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+
 /* ***********************
  * View Engine and Templates
  *************************/
@@ -49,6 +59,8 @@ app.set("layout", "./layouts/layout")
  * Routes
  *************************/
 app.use(staticRoutes)
+app.use("/account", accountRoute)
+
 
 // Inventory routes
 app.use("/inv", inventoryRoute)
@@ -90,6 +102,15 @@ app.use(async (err, req, res, next) => {
 app.get("/trigger-error", (req, res, next) => {
   next(new Error("Intentional footer error test"));
 });
+
+
+
+app.use(flash())
+
+app.use((req, res, next) => {
+  res.locals.messages = req.flash("notice")
+  next()
+})
 
 
 

@@ -1,0 +1,60 @@
+<!-- <%- include("../partials/header") %> -->
+
+<main class="login-page">
+  <section class="login-card">
+
+    <!-- h1 uses title value -->
+    <h1><%= title %></h1>
+
+    <!-- Flash message support -->
+    <% if (messages && messages.length > 0) { %>
+      <div class="flash-message">
+        <%= messages[0] %>
+      </div>
+    <% } %>
+
+    <!-- Login form -->
+    <!-- <form method="post" action="/account/login"> -->
+    <form method="post" action="/account/login" class="login-form">
+
+
+        <label for="account_email">Email</label>
+        <input
+            type="email"
+            id="account_email"
+            name="account_email"
+            required
+        >
+
+        <label for="account_password">Password</label>
+        <div class="password-hint">
+            Passwords must be at least 12 characters and contain at least 1 number,
+            1 capital letter and 1 special character
+        </div>
+        <input
+            type="password"
+            id="account_password"
+            name="account_password"
+            required
+            pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
+        >
+
+        <button type="submit">Login</button>
+
+        <!-- <p class="form-link">
+            No account yet?
+            <a href="/account/register">Register here</a>
+        </p> -->
+
+        </form>
+
+    <!-- Registration link -->
+    <p class="signup-text">
+      Don’t have an account?
+      <a href="/account/register" class="signup-link">Create an account</a>
+    </p>
+
+  </section>
+</main>
+
+<!-- <%- include("../partials/footer") %> -->
