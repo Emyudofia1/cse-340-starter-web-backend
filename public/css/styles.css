@@ -354,3 +354,30 @@ input:required:valid {
 .management-links a:hover {
   text-decoration: underline;
 }
+
+
+form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  margin-top: 1.5rem;
+  padding: 10px 15px;
+  cursor: pointer;
+}

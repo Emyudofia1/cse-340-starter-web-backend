@@ -1,30 +1,36 @@
 const pool = require("../database")
 
 /* ***************************
- *  Get all classification data
+ * Get all classification data
  * ************************** */
-async function getClassifications(){
-  return await pool.query("SELECT * FROM public.classification ORDER BY classification_name")
+async function getClassifications() {
+  return await pool.query(
+    "SELECT * FROM public.classification ORDER BY classification_name"
+  )
 }
 
 /* ***************************
- *  Get all inventory items and classification_name by classification_id
+ * Get all inventory items by classification_id
  * ************************** */
 async function getInventoryByClassificationId(classification_id) {
   try {
     const data = await pool.query(
-      `SELECT * FROM public.inventory AS i 
-      JOIN public.classification AS c 
-      ON i.classification_id = c.classification_id 
-      WHERE i.classification_id = $1`,
+      `SELECT * FROM public.inventory AS i
+       JOIN public.classification AS c
+       ON i.classification_id = c.classification_id
+       WHERE i.classification_id = $1`,
       [classification_id]
     )
     return data.rows
   } catch (error) {
-    console.error("getclassificationsbyid error " + error)
+    console.error("getInventoryByClassificationId error: " + error)
+    throw error
   }
 }
 
+/* ***************************
+ * Get a single inventory item by inv_id
+ * ************************** */
 async function getInventoryById(inv_id) {
   try {
     const sql = `
@@ -39,6 +45,9 @@ async function getInventoryById(inv_id) {
   }
 }
 
+/* ***************************
+ * Add a new classification
+ * ************************** */
 async function addClassification(classification_name) {
   try {
     const sql = `
@@ -48,36 +57,21 @@ async function addClassification(classification_name) {
     `
     return await pool.query(sql, [classification_name])
   } catch (error) {
-    return error.message
+    throw error
   }
 }
 
-async function addClassification(req, res) {
-  const { classification_name } = req.body
-
-  const result = await invModel.addClassification(classification_name)
-
-  if (result.rowCount > 0) {
-    req.flash("notice", "Classification added successfully.")
-    let nav = await utilities.getNav()
-    res.render("inventory/management", {
-      title: "Inventory Management",
-      nav,
-      errors: null,
-    })
-  } else {
-    req.flash("notice", "Failed to add classification.")
-    res.redirect("/inv/add-classification")
-  }
-}
-
-
+/* ***************************
+ * Add a new inventory item
+ * ************************** */
 async function addInventoryItem(invData) {
   try {
     const sql = `
-      INSERT INTO inventory 
-      (inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      INSERT INTO inventory
+      (inv_make, inv_model, inv_year, inv_description,
+       inv_image, inv_thumbnail, inv_price, inv_miles,
+       inv_color, classification_id)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
       RETURNING *
     `
     const values = [
@@ -95,10 +89,14 @@ async function addInventoryItem(invData) {
 
     return await pool.query(sql, values)
   } catch (error) {
-    return error.message
+    throw error
   }
 }
 
-
-module.exports = {getClassifications, getInventoryByClassificationId, getInventoryById, addClassification, addInventoryItem};
-
+module.exports = {
+  getClassifications,
+  getInventoryByClassificationId,
+  getInventoryById,
+  addClassification,
+  addInventoryItem,
+}

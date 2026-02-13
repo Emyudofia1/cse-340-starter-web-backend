@@ -82,7 +82,6 @@ invCont.buildAddClassification = async function (req, res, next) {
  * Handle Add Classification POST
  * ************************** */
 invCont.addClassification = [
-  // Validation middleware
   body("classification_name")
     .trim()
     .isLength({ min: 2 })
@@ -146,7 +145,6 @@ invCont.buildAddInventory = async function (req, res, next) {
  * Handle Add Vehicle POST
  * ************************** */
 invCont.addInventory = [
-  // Validation middleware
   body("inv_make").trim().isLength({ min: 1 }).withMessage("Make is required"),
   body("inv_model").trim().isLength({ min: 1 }).withMessage("Model is required"),
   body("inv_year").isInt({ min: 1900 }).withMessage("Enter a valid year"),
@@ -162,18 +160,27 @@ invCont.addInventory = [
       req.body.classification_id
     )
 
+    // If validation fails, render form with sticky input
     if (!errors.isEmpty()) {
       return res.render("inventory/add-inventory", {
         title: "Add Vehicle",
         nav,
         errors: errors.array(),
         classificationList,
-        formData: req.body, // sticky input
+        formData: req.body,
       })
     }
 
     try {
-      const result = await invModel.addInventory(req.body)
+      // Set default images if fields are blank
+      if (!req.body.inv_image) {
+        req.body.inv_image = "/images/vehicles/no-image.png"
+      }
+      if (!req.body.inv_thumbnail) {
+        req.body.inv_thumbnail = "/images/vehicles/no-image-tn.png"
+      }
+
+      const result = await invModel.addInventoryItem(req.body)
 
       if (result.rowCount > 0) {
         req.flash("notice", "Vehicle added successfully.")

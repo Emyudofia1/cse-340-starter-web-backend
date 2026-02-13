@@ -61,6 +61,7 @@ app.set("layout", "./layouts/layout")
 app.use(staticRoutes)
 app.use("/account", accountRoute)
 
+app.use(express.static("public"));
 
 // Inventory routes
 app.use("/inv", inventoryRoute)
