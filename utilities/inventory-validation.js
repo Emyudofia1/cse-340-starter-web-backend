@@ -30,4 +30,64 @@ validate.checkClassificationData = async (req, res, next) => {
   next()
 }
 
+validate.inventoryRules = () => {
+  return [
+
+    body("inv_make").trim().notEmpty().withMessage("Make is required"),
+
+    body("inv_model").trim().notEmpty().withMessage("Model is required"),
+
+    body("inv_year")
+      .isInt({ min: 1900 })
+      .withMessage("Valid year required"),
+
+    body("inv_price")
+      .isFloat({ min: 0 })
+      .withMessage("Valid price required"),
+
+    body("inv_miles")
+      .isFloat({ min: 0 })
+      .withMessage("Valid miles required"),
+
+    body("inv_color")
+      .trim()
+      .notEmpty()
+      .withMessage("Color required"),
+
+    body("classification_id")
+      .notEmpty()
+      .withMessage("Classification required"),
+  ]
+}
+
+validate.checkInventoryData = async (req, res, next) => {
+
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+
+    let nav = await utilities.getNav()
+
+    let classificationList =
+      await utilities.buildClassificationList(req.body.classification_id)
+
+    return res.render("inventory/add-inventory", {
+
+      title: "Add Vehicle",
+
+      nav,
+
+      classificationList,
+
+      errors,
+
+      formData: req.body
+
+    })
+  }
+
+  next()
+}
+
+
 module.exports = validate

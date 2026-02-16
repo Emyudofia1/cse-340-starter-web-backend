@@ -3,15 +3,25 @@
 <%- include('../partials/head') %>
 
 <body>
-    <div id="wrapper">
-        <%- include('../partials/header') %>
-        <%- include('../partials/navigation') %>
+  <div id="wrapper">
 
-        <main>
-            <%- body %>
-        </main>
+    <%- include('../partials/header') %>
+    <%- include('../partials/navigation') %>
 
-        <%- include('../partials/footer') %>
-    </div>
+    <main>
+
+      <% if (notice && notice.length > 0) { %>
+        <div class="notice">
+          <%= notice[0] %>
+        </div>
+      <% } %>
+
+      <%- body %>
+
+    </main>
+
+    <%- include('../partials/footer') %>
+
+  </div>
 </body>
 </html>

@@ -81,46 +81,31 @@ invCont.buildAddClassification = async function (req, res, next) {
 /* ***************************
  * Handle Add Classification POST
  * ************************** */
-invCont.addClassification = [
-  body("classification_name")
-    .trim()
-    .isLength({ min: 2 })
-    .withMessage("Classification name must be at least 2 characters long"),
+invCont.addClassification = async function (req, res, next) {
+  const nav = await utilities.getNav()
+  const { classification_name } = req.body
 
-  async (req, res, next) => {
-    const errors = validationResult(req)
-    const nav = await utilities.getNav()
-    const { classification_name } = req.body
+  try {
+    const result = await invModel.addClassification(classification_name)
 
-    if (!errors.isEmpty()) {
+    if (result.rowCount > 0) {
+      req.flash("notice", "Classification added successfully.")
+      return res.redirect("/inv/")
+    } else {
+      req.flash("notice", "Failed to add classification.")
       return res.render("inventory/add-classification", {
         title: "Add Classification",
         nav,
-        errors: errors.array(),
-        classification_name, // sticky input
+        errors: null,
+        classification_name,
       })
     }
 
-    try {
-      const result = await invModel.addClassification(classification_name)
+  } catch (error) {
+    next(error)
+  }
+}
 
-      if (result.rowCount > 0) {
-        req.flash("notice", "Classification added successfully.")
-        return res.redirect("/inv/")
-      } else {
-        req.flash("notice", "Failed to add classification.")
-        return res.render("inventory/add-classification", {
-          title: "Add Classification",
-          nav,
-          errors: null,
-          classification_name,
-        })
-      }
-    } catch (error) {
-      next(error)
-    }
-  },
-]
 
 /* ***************************
  * Build Add Vehicle Form
@@ -144,61 +129,43 @@ invCont.buildAddInventory = async function (req, res, next) {
 /* ***************************
  * Handle Add Vehicle POST
  * ************************** */
-invCont.addInventory = [
-  body("inv_make").trim().isLength({ min: 1 }).withMessage("Make is required"),
-  body("inv_model").trim().isLength({ min: 1 }).withMessage("Model is required"),
-  body("inv_year").isInt({ min: 1900 }).withMessage("Enter a valid year"),
-  body("inv_price").isFloat({ min: 0 }).withMessage("Enter a valid price"),
-  body("inv_miles").isFloat({ min: 0 }).withMessage("Enter valid mileage"),
-  body("inv_color").trim().notEmpty().withMessage("Color is required"),
-  body("classification_id").notEmpty().withMessage("Select a classification"),
+invCont.addInventory = async function (req, res, next) {
 
-  async (req, res, next) => {
-    const errors = validationResult(req)
-    const nav = await utilities.getNav()
-    const classificationList = await utilities.buildClassificationList(
-      req.body.classification_id
-    )
+  const nav = await utilities.getNav()
+  const classificationList = await utilities.buildClassificationList(
+    req.body.classification_id
+  )
 
-    // If validation fails, render form with sticky input
-    if (!errors.isEmpty()) {
+  try {
+
+    if (!req.body.inv_image)
+      req.body.inv_image = "/images/vehicles/no-image.png"
+
+    if (!req.body.inv_thumbnail)
+      req.body.inv_thumbnail = "/images/vehicles/no-image-tn.png"
+
+    const result = await invModel.addInventoryItem(req.body)
+
+    if (result.rowCount > 0) {
+      req.flash("notice", "Vehicle added successfully.")
+      return res.redirect("/inv/")
+    } else {
+
+      req.flash("notice", "Failed to add vehicle.")
+
       return res.render("inventory/add-inventory", {
         title: "Add Vehicle",
         nav,
-        errors: errors.array(),
         classificationList,
+        errors: null,
         formData: req.body,
       })
     }
 
-    try {
-      // Set default images if fields are blank
-      if (!req.body.inv_image) {
-        req.body.inv_image = "/images/vehicles/no-image.png"
-      }
-      if (!req.body.inv_thumbnail) {
-        req.body.inv_thumbnail = "/images/vehicles/no-image-tn.png"
-      }
+  } catch (error) {
+    next(error)
+  }
+}
 
-      const result = await invModel.addInventoryItem(req.body)
-
-      if (result.rowCount > 0) {
-        req.flash("notice", "Vehicle added successfully.")
-        return res.redirect("/inv/")
-      } else {
-        req.flash("notice", "Failed to add vehicle.")
-        return res.render("inventory/add-inventory", {
-          title: "Add Vehicle",
-          nav,
-          errors: null,
-          classificationList,
-          formData: req.body,
-        })
-      }
-    } catch (error) {
-      next(error)
-    }
-  },
-]
 
 module.exports = invCont

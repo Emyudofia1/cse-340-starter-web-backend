@@ -7,117 +7,108 @@ const expressLayouts = require("express-ejs-layouts")
 require("dotenv").config()
 const app = express()
 
-
 const staticRoutes = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities")
 const session = require("express-session")
-const pool = require('./database/')
+const pool = require("./database/")
 const accountRoute = require("./routes/accountRoute")
 const flash = require("connect-flash")
 const bodyParser = require("body-parser")
-
-
-
+const cookieParser = require("cookie-parser")
 
 /* ***********************
  * Middleware
  * ************************/
- app.use(session({
-  store: new (require('connect-pg-simple')(session))({
+
+// Body parser FIRST
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// Cookie parser
+app.use(cookieParser())
+
+// Session middleware
+app.use(session({
+  store: new (require("connect-pg-simple")(session))({
     createTableIfMissing: true,
     pool,
   }),
   secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-  name: 'sessionId',
+  resave: false,
+  saveUninitialized: false,
+  name: "sessionId",
 }))
 
+// ------------------------
+// Flash Messages Middleware
+// ------------------------
+app.use(flash())
 
-// Express Messages Middleware
-app.use(require('connect-flash')())
-app.use(function(req, res, next){
-  res.locals.messages = require('express-messages')(req, res)
+// Make flash messages available in ALL views
+app.use((req, res, next) => {
+  // For old templates using 'messages'
+  res.locals.messages = req.flash("notice")
+  
+  // For templates using 'notice'
+  res.locals.notice = req.flash("notice")
+  
   next()
 })
 
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+// Flash middleware
+app.use(flash())
 
+// Make flash messages available in ALL views
+app.use((req, res, next) => {
+  res.locals.notice = req.flash("notice")
+  next()
+})
+
+// JWT check middleware
+app.use(utilities.checkJWTToken)
 
 /* ***********************
- * View Engine and Templates
- *************************/
+ * View Engine and Layout
+ * ************************/
 app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout")
 
 /* ***********************
  * Routes
- *************************/
+ * ************************/
 app.use(staticRoutes)
 app.use("/account", accountRoute)
-
-app.use(express.static("public"));
-
-// Inventory routes
+app.use(express.static("public"))
 app.use("/inv", inventoryRoute)
 
-// Home route → controller handles rendering
-// app.get("/", baseController.buildHome)
-// Index route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 
-
-// File Not Found Route - must be last route in list
-app.use(async (req, res, next) => {
-  next({status: 404, message: 'Sorry, we appear to have lost that page.'})
-})
-
-
 /* ***********************
- * Express Error Handler
- * Place after all other middleware
- *************************/
+ * Error Handler
+ * ************************/
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
 
-  if (err.status == 404) {
-    message = err.message
-  } else {
-    message = 'Oh no! There was a crash. Maybe try a different route?'
-  }
+  const message =
+    err.status == 404
+      ? err.message
+      : "Oh no! There was a crash. Maybe try a different route?"
 
   res.render("errors/error", {
-    title: err.status || 'Server Error',
+    title: err.status || "Server Error",
     message,
-    nav
+    nav,
   })
 })
 
-
-app.get("/trigger-error", (req, res, next) => {
-  next(new Error("Intentional footer error test"));
-});
-
-
-
-app.use(flash())
-
-app.use((req, res, next) => {
-  res.locals.messages = req.flash("notice")
-  next()
-})
-
-
-
 /* ***********************
  * Server
- *************************/
+ * ************************/
 const port = process.env.PORT || 5500
 
 app.listen(port, () => {
