@@ -64,34 +64,109 @@ async function addClassification(classification_name) {
 /* ***************************
  * Add a new inventory item
  * ************************** */
-async function addInventoryItem(invData) {
+async function addInventoryItem(
+  inv_make,
+  inv_model,
+  inv_year,
+  inv_description,
+  inv_image,
+  inv_thumbnail,
+  inv_price,
+  inv_miles,
+  inv_color,
+  classification_id
+) {
   try {
     const sql = `
-      INSERT INTO inventory
-      (inv_make, inv_model, inv_year, inv_description,
-       inv_image, inv_thumbnail, inv_price, inv_miles,
-       inv_color, classification_id)
+      INSERT INTO inventory (
+        inv_make,
+        inv_model,
+        inv_year,
+        inv_description,
+        inv_image,
+        inv_thumbnail,
+        inv_price,
+        inv_miles,
+        inv_color,
+        classification_id
+      )
       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
       RETURNING *
     `
     const values = [
-      invData.inv_make,
-      invData.inv_model,
-      invData.inv_year,
-      invData.inv_description,
-      invData.inv_image,
-      invData.inv_thumbnail,
-      invData.inv_price,
-      invData.inv_miles,
-      invData.inv_color,
-      invData.classification_id,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id
     ]
 
-    return await pool.query(sql, values)
+    const data = await pool.query(sql, values)
+    return data.rows[0]
   } catch (error) {
+    console.error("addInventoryItem error: " + error)
     throw error
   }
 }
+
+
+/* ***************************
+ * Add a new inventory item
+ * ************************** */
+async function updateInventory(
+  inv_id,
+  inv_make,
+  inv_model,
+  inv_year,
+  inv_description,
+  inv_image,
+  inv_thumbnail,
+  inv_price,
+  inv_miles,
+  inv_color,
+  classification_id
+) {
+  try {
+    const sql = `
+      UPDATE inventory
+      SET inv_make = $1,
+          inv_model = $2,
+          inv_year = $3,
+          inv_description = $4,
+          inv_image = $5,
+          inv_thumbnail = $6,
+          inv_price = $7,
+          inv_miles = $8,
+          inv_color = $9,
+          classification_id = $10
+      WHERE inv_id = $11
+      RETURNING *
+    `
+    const values = [
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id,
+      inv_id
+    ]
+    const data = await pool.query(sql, values)
+    return data.rows[0]
+  } catch (error) {
+    console.error("updateInventory error: " + error)
+  }
+}
+
 
 module.exports = {
   getClassifications,
@@ -99,4 +174,5 @@ module.exports = {
   getInventoryById,
   addClassification,
   addInventoryItem,
+  updateInventory
 }

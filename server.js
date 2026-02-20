@@ -17,6 +17,7 @@ const accountRoute = require("./routes/accountRoute")
 const flash = require("connect-flash")
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
+const { addUserDataToLocals } = require("./utilities/accountUtils");
 
 /* ***********************
  * Middleware
@@ -44,28 +45,18 @@ app.use(session({
 // ------------------------
 // Flash Messages Middleware
 // ------------------------
+// Flash Messages Middleware
 app.use(flash())
 
-// Make flash messages available in ALL views
-app.use((req, res, next) => {
-  // For old templates using 'messages'
-  res.locals.messages = req.flash("notice")
-  
-  // For templates using 'notice'
-  res.locals.notice = req.flash("notice")
-  
-  next()
-})
-
-
-// Flash middleware
-app.use(flash())
-
-// Make flash messages available in ALL views
 app.use((req, res, next) => {
   res.locals.notice = req.flash("notice")
   next()
 })
+
+
+
+app.use(addUserDataToLocals);
+
 
 // JWT check middleware
 app.use(utilities.checkJWTToken)

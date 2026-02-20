@@ -26,7 +26,9 @@ utilities.getNav = async function () {
  * ************************** */
 utilities.buildClassificationList = async function (selectedId = null) {
   const classificationsData = await invModel.getClassifications()
-  let list = '<select name="classification_id" id="classification_id" required>'
+  // let list = '<select name="classification_id" id="classification_id" required>'
+  let list = '<select name="classification_id" id="classificationList" required>'
+
   list += '<option value="">Choose a Classification</option>'
   classificationsData.rows.forEach((row) => {
     const selected = row.classification_id == selectedId ? "selected" : ""
