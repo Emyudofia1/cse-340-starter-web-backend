@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
 require("dotenv").config()
 const { validationResult } = require("express-validator")
+const activityModel = require("../models/activity-model");
 
 /* ****************************************
  * Build Login View
@@ -54,7 +55,7 @@ async function accountLogin(req, res) {
       secure: process.env.NODE_ENV !== "development",
       maxAge: 3600000
     })
-
+    await activityModel.logActivity(accountData.account_id, "Login");
     res.redirect("/account")
   } catch (error) {
     console.error("Login error:", error)
@@ -160,6 +161,7 @@ async function updateAccount(req, res) {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
+    await activityModel.logActivity(account_id, "Update Account");
     return res.render("account/update", {
       title: "Update Account",
       nav,
@@ -220,10 +222,28 @@ async function updatePassword(req, res) {
 /* ****************************************
  * Logout
  **************************************** */
-function logout(req, res) {
-  res.clearCookie("jwt")
-  req.flash("notice", "Logged out successfully")
-  res.redirect("/")
+// function logout(req, res) {
+//   res.clearCookie("jwt")
+//   req.flash("notice", "Logged out successfully")
+//   res.redirect("/")
+// }
+
+async function logout(req, res) {
+  try {
+    if (req.cookies.jwt) {
+      // Clear JWT cookie
+      res.clearCookie("jwt");
+    }
+
+    // Destroy session if it exists
+    req.session.destroy(() => {
+      res.redirect("/");
+    });
+
+  } catch (error) {
+    console.error("Logout Error:", error);
+    res.redirect("/");
+  }
 }
 
 module.exports = {

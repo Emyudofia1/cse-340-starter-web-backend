@@ -4,9 +4,9 @@
   </span>
 
   <div id="tools">
-    <% if (typeof loggedIn !== 'undefined' && loggedIn) { %>
+    <% if (loggedin) { %>
       <span class="welcome">
-        Welcome <%= firstName %>
+        Welcome <%= accountData.account_firstname %>
       </span>
       |
       <a href="/account/logout" title="Click to log out">Logout</a>

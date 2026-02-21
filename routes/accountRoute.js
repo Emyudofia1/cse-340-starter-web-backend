@@ -4,6 +4,8 @@ const utilities = require("../utilities/")
 const accountController = require("../controllers/accountController")
 const regValidate = require("../utilities/account-validation")
 const { body } = require("express-validator")
+const activityController = require("../controllers/activityController");
+
 
 // Login view
 router.get("/login", utilities.handleErrors(accountController.buildLogin))
@@ -67,5 +69,14 @@ router.post(
 
 // Logout
 router.get("/logout", accountController.logout)
+
+
+
+// Admin Activity Log
+router.get(
+  "/activity",
+  utilities.checkLogin,
+  activityController.buildActivityPage
+);
 
 module.exports = router

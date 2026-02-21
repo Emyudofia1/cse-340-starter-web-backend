@@ -108,6 +108,8 @@ utilities.checkJWTToken = (req, res, next) => {
         if (err) {
           req.flash("notice", "Please log in")
           res.clearCookie("jwt")
+          res.locals.loggedin = 0
+          res.locals.accountData = null
           return res.redirect("/account/login")
         }
         res.locals.accountData = accountData
@@ -116,6 +118,9 @@ utilities.checkJWTToken = (req, res, next) => {
       }
     )
   } else {
+    // Reset flags if no JWT is present
+    res.locals.loggedin = 0
+    res.locals.accountData = null
     next()
   }
 }
@@ -124,14 +129,22 @@ utilities.checkJWTToken = (req, res, next) => {
 /* ****************************************
  *  Check Login
  * ************************************ */
-utilities.checkLogin = (req, res, next) => {
-  if (res.locals.loggedin) {
-    next()
-  } else {
-    req.flash("notice", "Please log in.")
-    return res.redirect("/account/login")
-  }
-}
+// utilities.checkLogin = (req, res, next) => {
+//   if (res.locals.loggedin) {
+//     next()
+//   } else {
+//     req.flash("notice", "Please log in.")
+//     return res.redirect("/account/login")
+//   }
+// }
 
+utilities.checkLogin = (req, res, next) => {
+  if (req.cookies.jwt) {
+    next();
+  } else {
+    req.flash("notice", "Please log in.");
+    return res.redirect("/account/login");
+  }
+};
 
 module.exports = utilities

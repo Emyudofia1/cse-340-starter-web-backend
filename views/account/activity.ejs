@@ -1,0 +1,30 @@
+<h1><%= title %></h1>
+
+<% if (messages && messages.length > 0) { %>
+  <div class="flash-message">
+    <%= messages[0] %>
+  </div>
+<% } %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Activity</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (activityLogs.length > 0) { %>
+      <% activityLogs.forEach(log => { %>
+        <tr>
+          <td><%= log.activity_type %></td>
+          <td><%= log.activity_time.toLocaleString() %></td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr>
+        <td colspan="2">No activity recorded.</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
